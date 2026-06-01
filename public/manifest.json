@@ -1,0 +1,47 @@
+{
+  "name": "LifeOS AI — Life Operating System",
+  "short_name": "LifeOS AI",
+  "description": "Your personal life operating system. Track fitness, nutrition, habits, coding, finance, sleep, and more — powered by Krishna wisdom.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#6C63FF",
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["productivity", "health", "fitness", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/?module=dashboard",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Fitness",
+      "short_name": "Fitness",
+      "url": "/?module=fitness",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Habits",
+      "short_name": "Habits",
+      "url": "/?module=habits",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
