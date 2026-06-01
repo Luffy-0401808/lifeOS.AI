@@ -1613,6 +1613,16 @@ export default function LifeOSApp() {
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .module-enter { animation: fadeIn 0.3s ease; }
     select option { background: #1A1A26; color: #F0F0F8; }
+    .sidebar-container { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 50; }
+    @media (max-width: 768px) {
+      .sidebar-container { position: fixed !important; left: 0; top: 0; bottom: 0; transform: translateX(-100%); }
+      .sidebar-container.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.5); }
+      .mobile-only { display: flex !important; }
+      .desktop-only { display: none !important; }
+    }
+    @media (min-width: 769px) {
+      .mobile-only { display: none !important; }
+    }
   `;
 
   return (
@@ -1621,15 +1631,14 @@ export default function LifeOSApp() {
 
       {/* Sidebar Overlay Mobile */}
       {sidebarOpen && (
-        <div onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 40 }} />
+        <div className="mobile-only" onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 40, backdropFilter: "blur(2px)" }} />
       )}
 
       {/* Sidebar */}
-      <div style={{
+      <div className={`sidebar-container ${sidebarOpen ? 'open' : ''}`} style={{
         width: 240, flexShrink: 0, background: t.surface, borderRight: `1px solid ${t.border}`,
         display: "flex", flexDirection: "column", height: "100vh", position: "sticky", top: 0,
-        overflowY: "auto",
-        "@media (max-width: 768px)": { display: "none" },
+        overflowY: "auto"
       }}>
         {/* Logo */}
         <div style={{ padding: "24px 20px 16px", borderBottom: `1px solid ${t.border}` }}>
@@ -1645,7 +1654,7 @@ export default function LifeOSApp() {
         {/* Nav */}
         <nav style={{ flex: 1, padding: "12px 12px" }}>
           {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => setActiveModule(item.id)} style={{
+            <button key={item.id} onClick={() => { setActiveModule(item.id); setSidebarOpen(false); }} style={{
               width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
               borderRadius: 10, border: "none", cursor: "pointer", marginBottom: 2,
               background: activeModule === item.id ? `${t.primary}25` : "transparent",
@@ -1671,29 +1680,19 @@ export default function LifeOSApp() {
       {/* Main Content */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         {/* Mobile Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", background: t.surface, borderBottom: `1px solid ${t.border}`, position: "sticky", top: 0, zIndex: 30 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${t.primary}, #A78BFA)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⚡</div>
-            <span style={{ fontWeight: 900, fontSize: 16, color: t.text, letterSpacing: "-0.02em" }}>LifeOS AI</span>
+        <div className="mobile-only" style={{ alignItems: "center", justifyContent: "space-between", padding: "16px 20px", background: t.surface, borderBottom: `1px solid ${t.border}`, position: "sticky", top: 0, zIndex: 30 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <button onClick={() => setSidebarOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 24, padding: 0, color: t.text, display: "flex", alignItems: "center" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${t.primary}, #A78BFA)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⚡</div>
+              <span style={{ fontWeight: 900, fontSize: 18, color: t.text, letterSpacing: "-0.02em" }}>LifeOS AI</span>
+            </div>
           </div>
-          <button onClick={() => setIsDark(!isDark)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20 }}>
+          <button onClick={() => setIsDark(!isDark)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: 0 }}>
             {isDark ? "☀️" : "🌙"}
           </button>
-        </div>
-
-        {/* Mobile Nav Bar */}
-        <div style={{ display: "flex", overflowX: "auto", padding: "10px 16px", gap: 6, background: t.surface, borderBottom: `1px solid ${t.border}` }}>
-          {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => setActiveModule(item.id)} style={{
-              display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 8,
-              border: "none", cursor: "pointer", fontWeight: 700, fontSize: 12, whiteSpace: "nowrap", flexShrink: 0,
-              background: activeModule === item.id ? t.primary : `${t.primary}18`,
-              color: activeModule === item.id ? "white" : t.textSecondary,
-              transition: "all 0.15s",
-            }}>
-              <span>{item.icon}</span> {item.label}
-            </button>
-          ))}
         </div>
 
         {/* Module Content */}
